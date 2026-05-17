@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react'
 import styles from './CartFloating.module.css'
 
 export default function CartFloating({ cartList, activeCartIndex, onRemove, onSelectActive, onClear }) {
