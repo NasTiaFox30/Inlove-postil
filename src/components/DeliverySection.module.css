@@ -1,0 +1,80 @@
+.section {
+  padding: 6rem 2rem;
+  background: var(--cream);
+  scroll-margin-top: 80px;
+}
+
+.inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.head { text-align: center; display: flex; flex-direction: column; gap: 0.6rem; }
+
+.eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mint-dark);
+  font-weight: 500;
+}
+
+.title { font-size: clamp(1.8rem, 3vw, 2.5rem); color: var(--charcoal); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.card {
+  padding: 2rem;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+}
+
+.icon { font-size: 2rem; }
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--charcoal);
+  font-weight: 400;
+}
+
+.cardText {
+  font-size: 0.9rem;
+  color: var(--warm-gray);
+  line-height: 1.7;
+}
+
+.cta { display: flex; justify-content: center; }
+
+.ctaBtn {
+  padding: 0.9rem 2.5rem;
+  border: 2px solid var(--mint-dark);
+  border-radius: var(--radius-xl);
+  color: var(--mint-dark);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all var(--transition);
+}
+
+.ctaBtn:hover {
+  background: var(--mint-dark);
+  color: #fff;
+  transform: translateY(-2px);
+}
