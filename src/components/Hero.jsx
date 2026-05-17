@@ -85,11 +85,13 @@ export default function Hero() {
             <div className={styles.textureLabel}>~ Elite Texture ~</div>
           </div>
 
-          {/* бейдж акції */}
-          <div className={styles.discountCircle}>
-            <span className={styles.circlePercentage}>−20%</span>
-            <span className={styles.circleText}>на все</span>
-          </div>
+          {/* ДИНАМІЧНИЙ ФІКС: Круглий акційний бейдж рендериться лише тоді, коли акція увімкнена */}
+          {hasAnyDiscount && (
+            <div className={styles.discountCircle}>
+              <span className={styles.circlePercentage}>%</span>
+              <span className={styles.circleText}>Sale</span>
+            </div>
+          )}
 
         </div>
       </div>
