@@ -14,9 +14,7 @@ export default function Header() {
 
   const navLinks = [
     ...categories.map(c => ({ label: c.label, href: `#${c.anchor}` })),
-    { label: 'Послуги', href: '#poslugi' },
-    { label: 'Доставка', href: '#dostavka' },
-    { label: 'Контакти', href: '#kontakty' },
+    ...headerdetails.navLinks,
   ]
 
   return (
