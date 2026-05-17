@@ -1,3 +1,21 @@
+export const herodetails = [
+  {
+    title: 'Постільна білизна, яку хочеться відчувати',
+    sub: 'Створюємо простір для твоїх найтепліших снів. Натуральна 100% бавовна у преміальних текстурах: шовковистий сатин, затишна бязь та готельний страйп-сатин.',
+    badge: 'Особлива пропозиція: знижка −20%',
+    stats: [
+      { num: '100%', label: 'Бавовна' },
+      { num: '3', label: 'Текстури' },
+      { num: '15', label: 'Відтінків' },
+      { num: '4', label: 'Розміри' },
+    ],
+    mainText: "Grey Balance",
+    mainColor: '#9E9E9E',
+    mainVisual: '/media/IMG_2339.PNG',
+    secondaryVisual: '/texture.jpg',
+  },
+]
+
 export const categories = [
   { id: 'biaz', label: 'Бязь', labelEn: 'Cotton Basic', anchor: 'biaz' },
   { id: 'satin', label: 'Сатин', labelEn: 'Signature Luxe', anchor: 'satin' },
