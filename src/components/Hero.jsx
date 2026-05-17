@@ -4,6 +4,8 @@ import { herodetails } from '../data/products'
 
 export default function Hero() {
   const [hero] = herodetails
+  const globalActive = discountConfig.globalEnabled
+  const hasAnyDiscount = globalActive && Object.values(discountConfig.categories).some(val => val > 0)
 
   return (
     <section className={styles.hero} id="hero">
