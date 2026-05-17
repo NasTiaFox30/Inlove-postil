@@ -19,9 +19,18 @@ export default function Hero() {
 
       {/* Ліва частина: Контент */}
       <div className={styles.content}>
-        <div className={styles.badge}>
-          {hero.badge}
-        </div>
+        {/* Показуємо верхній акційний бейдж тільки за наявності акцій */}
+        {hasAnyDiscount ? (
+          <div className={styles.badge}>
+            <span className={styles.badgeDot} />
+            {hero.badge}
+          </div>
+        ) : (
+          <div className={styles.badge}>
+            <span className={styles.badgeDot} style={{ backgroundColor: '#4CAF50' }} />
+            Преміальна якість від виробника
+          </div>
+        )}
 
         <h1 className={styles.title}>
           {hero.title.split(',')[0]},<br />
