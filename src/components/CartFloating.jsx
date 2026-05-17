@@ -73,7 +73,7 @@ export default function CartFloating({ cartList, activeCartIndex, onRemove, onSe
 
   const handleEditExtras = (index) => {
     onSelectActive(index)
-    document.getElementById('rozmiry')?.scrollIntoView({ behavior: 'smooth' })
+    document.getElementById('poslugi')?.scrollIntoView({ behavior: 'smooth' })
   }
 
   // Маленька кругла кнопка
