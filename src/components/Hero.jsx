@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Hero.module.css'
-import { herodetails } from '../data/products'
+import { herodetails, discountConfig } from '../data/products'
 
 export default function Hero() {
   const [hero] = herodetails
