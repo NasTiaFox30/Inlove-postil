@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import ProductSection from './components/ProductSection'
@@ -10,8 +10,23 @@ import CartFloating from './components/CartFloating'
 import { products } from './data/products'
 
 export default function App() {
-  const [cartList, setCartList] = useState([])
-  const [activeCartIndex, setActiveCartIndex] = useState(null)
+  // Лінива ініціалізація стану: читаємо дані з localStorage при першому запуску
+  const [cartList, setCartList] = useState(() => {
+    const savedCart = localStorage.getItem('inlove_cart')
+    return savedCart ? JSON.parse(savedCart) : []
+  })
+
+  // Стан для активного товару в ExtrasSection
+  const [activeCartIndex, setActiveCartIndex] = useState(() => {
+    const savedCart = localStorage.getItem('inlove_cart')
+    const parsed = savedCart ? JSON.parse(savedCart) : []
+    return parsed.length > 0 ? parsed.length - 1 : null
+  })
+
+  // Ефект автоматичного запису в localStorage при будь-якій маніпуляції з кошиком
+  useEffect(() => {
+    localStorage.setItem('inlove_cart', JSON.stringify(cartList))
+  }, [cartList])
 
   // Додавання нової постілі до списку кошика
   const addToCart = (productInfo) => {
@@ -76,6 +91,7 @@ export default function App() {
   const clearCart = () => {
     setCartList([])
     setActiveCartIndex(null)
+    localStorage.removeItem('inlove_cart') // Повністю чистимо сховище
   }
 
   // Об'єкт активного товару, який ми передаємо в ExtrasSection
@@ -86,9 +102,9 @@ export default function App() {
       <Header />
       <main>
         <Hero />
-        <ProductSection category="biaz" data={products.biaz} onAddToCart={addToCart} />
-        <ProductSection category="satin" data={products.satin} onAddToCart={addToCart} />
-        <ProductSection category="stripe" data={products.stripe} onAddToCart={addToCart} />
+        <ProductSection category="biaz" data={products.biaz} onAddToCart={addToCart} cartList={cartList} />
+        <ProductSection category="satin" data={products.satin} onAddToCart={addToCart} cartList={cartList} />
+        <ProductSection category="stripe" data={products.stripe} onAddToCart={addToCart} cartList={cartList} />
         
         <ExtrasSection 
           activeCartItem={activeCartItem} 
