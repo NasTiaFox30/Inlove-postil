@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import styles from './Header.module.css'
-import { categories } from '../data/products'
-import { headerdetails } from '../data/products'
+import { categories, headerdetails } from '../data/products'
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
@@ -13,21 +12,34 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // БЛОКУВАННЯ СКРОЛУ ПРИ ВІДКРИТТІ МЕНЮ
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    // Запобіжник: якщо компонент демонтується, повертаємо скрол
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
   const navLinks = [
     ...categories.map(c => ({ label: c.label, href: `#${c.anchor}` })),
-    ...headerdetails.navLinks,
+    ...(headerdetails?.navLinks || []),
   ]
 
   return (
-    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
+    <header className={`${styles.header} ${scrolled || menuOpen ? styles.scrolled : ''}`}>
       <div className={styles.inner}>
-        <a href="#hero" className={styles.logo}>
-          <img src={headerdetails.logoImg} alt="Logo" className={styles.logoImg} />
-          <span className={styles.logoScript}>{headerdetails.logo.script}</span>
-          <span className={styles.logoDot}>{headerdetails.logo.dot}</span>
-          <span className={styles.logoWord}>{headerdetails.logo.word}</span>
+        
+        <a href="#hero" className={styles.logo} onClick={() => setMenuOpen(false)}>
+          {headerdetails?.logoImg && <img src={headerdetails.logoImg} alt="Logo" className={styles.logoImg} />}
+          <span className={styles.logoScript}>{headerdetails?.logo?.script || 'inlove'}</span>
+          <span className={styles.logoDot}>{headerdetails?.logo?.dot || '.'}</span>
+          <span className={styles.logoWord}>{headerdetails?.logo?.word || 'postil'}</span>
         </a>
 
+        {/* Мобільна адаптація */}
         <nav className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}>
           {navLinks.map(l => (
             <a
@@ -45,13 +57,13 @@ export default function Header() {
         </nav>
 
         <button
-          className={styles.burger}
+          className={`${styles.burger} ${menuOpen ? styles.burgerActive : ''}`}
           onClick={() => setMenuOpen(v => !v)}
           aria-label="Меню"
         >
-          <span className={menuOpen ? styles.burgerOpen : ''} />
-          <span className={menuOpen ? styles.burgerOpen : ''} />
-          <span className={menuOpen ? styles.burgerOpen : ''} />
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
       </div>
     </header>
