@@ -4,7 +4,68 @@ import styles from './CartFloating.module.css'
 export default function CartFloating({ cartList, activeCartIndex, onRemove, onSelectActive, onClear }) {
   if (cartList.length === 0) return null
 
-  // Сума кошика
+  const [isMinimized, setIsMinimized] = useState(false)
+  // Прапорець, який фіксує, що користувач власноруч приховував кошик
+  const [wasManuallyMinimized, setWasManuallyMinimized] = useState(false)
+  
+  const lastScrollY = useRef(0)
+  const touchStartX = useRef(0)
+
+  // --- Автоматичне згортання при скролі вниз (працює завжди), розгортання вгору (ТІЛЬКИ якщо не ховали вручну)
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+        setIsMinimized(true)
+      } else if (currentScrollY < lastScrollY.current) {
+        // Розгортаємо при скролі вгору, тільки якщо користувач не ховав кошик сам
+        if (!wasManuallyMinimized) {
+          setIsMinimized(false)
+        }
+      }
+      
+      lastScrollY.current = currentScrollY
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [wasManuallyMinimized])
+
+  // --- Автоматично розгортаємо кошик при додаванні нового товару (ЯКЩО не було ручного приховування)
+  useEffect(() => {
+    if (cartList.length > 0 && !wasManuallyMinimized) {
+      setIsMinimized(false)
+    }
+  }, [cartList.length, wasManuallyMinimized])
+
+  // Ручне приховування кошика
+  const handleMinimizeHandly = () => {
+    setIsMinimized(true)
+    setWasManuallyMinimized(true) // Блокуємо авто-появу
+  }
+
+  // Ручне відкриття кошика
+  const handleMaximizeHandly = () => {
+    setIsMinimized(false)
+    setWasManuallyMinimized(false) // Знімаємо блок
+  }
+
+  // Обробка свайпу праворуч для приховування
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchMove = (e) => {
+    if (isMinimized) return
+    const touchCurrentX = e.touches[0].clientX
+    const diffX = touchCurrentX - touchStartX.current
+
+    if (diffX > 60) {
+      handleMinimizeHandly()
+    }
+  }
+
   const totalCartPrice = cartList.reduce((grandTotal, item) => {
     const extrasSum = item.selectedExtras.reduce((sum, ext) => sum + (ext.price || 0), 0)
     return grandTotal + item.basePriceSale + extrasSum
