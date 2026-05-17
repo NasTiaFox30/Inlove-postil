@@ -21,9 +21,10 @@ export default function Header() {
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.inner}>
         <a href="#hero" className={styles.logo}>
-          <span className={styles.logoScript}>inlove</span>
-          <span className={styles.logoDot}>.</span>
-          <span className={styles.logoWord}>postil</span>
+          <img src={headerdetails.logoImg} alt="Logo" className={styles.logoImg} />
+          <span className={styles.logoScript}>{headerdetails.logo.script}</span>
+          <span className={styles.logoDot}>{headerdetails.logo.dot}</span>
+          <span className={styles.logoWord}>{headerdetails.logo.word}</span>
         </a>
 
         <nav className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}>
