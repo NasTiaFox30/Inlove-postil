@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import styles from './Header.module.css'
 import { categories } from '../data/products'
+import { headerdetails } from '../data/products'
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
