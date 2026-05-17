@@ -92,7 +92,11 @@ export default function CartFloating({ cartList, activeCartIndex, onRemove, onSe
   }
 
   return (
-    <div className={styles.cartFloating}>
+    <div 
+      className={styles.cartFloating}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+    >
       <div className={styles.header}>
         <div className={styles.titleRow}>
           <span className={styles.bagIcon}>🛒</span>
