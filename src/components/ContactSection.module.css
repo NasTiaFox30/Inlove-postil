@@ -113,6 +113,97 @@
   color: var(--mint-dark);
 }
 
+
+
+/* Нові стилі для вбудованого кошика в блоці оформлення */
+.checkoutCartBlock {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.checkoutItemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.checkoutItemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 1rem;
+}
+
+.checkoutItemRow:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.checkoutItemMain {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.checkoutItemName {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.checkoutItemMeta {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+}
+
+.checkoutItemExtras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.checkoutExtraBadge {
+  background: rgba(123, 191, 170, 0.15);
+  color: var(--mint-light);
+  font-size: 0.72rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(123, 191, 170, 0.2);
+}
+
+.checkoutItemPrice {
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.checkoutTotalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px dashed rgba(255, 255, 255, 0.15);
+  padding-top: 1.25rem;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.checkoutTotalRow strong {
+  font-size: 1.4rem;
+  color: var(--mint);
+  font-family: var(--font-display);
+}
+
+
 /* Success */
 .success {
   padding: 3rem 2rem;
