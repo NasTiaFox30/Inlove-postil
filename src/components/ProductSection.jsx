@@ -2,7 +2,7 @@ import { useState } from 'react'
 import styles from './ProductSection.module.css'
 import { sizes } from '../data/products'
 
-export default function ProductSection({ category, data, onAddToCart, cart }) {
+export default function ProductSection({ category, data, onAddToCart, cartList }) {
   const [activeItem, setActiveItem] = useState(data.items[0])
   const [activeSize, setActiveSize] = useState('poltora')
 
