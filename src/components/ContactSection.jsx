@@ -7,6 +7,15 @@ export default function ContactSection({ cartList, onClearCart }) {
 
   const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
+  // Перевіряємо, чи є товари в кошику
+  const hasItems = cartList.length > 0
+
+  // Рахуємо загальну фінальну касу
+  const totalOrderPrice = cartList.reduce((grandTotal, item) => {
+    const extrasSum = item.selectedExtras.reduce((sum, ext) => sum + (ext.price || 0), 0)
+    return grandTotal + item.basePriceSale + extrasSum
+  }, 0)
+
   const handleSubmit = e => {
     e.preventDefault()
     console.log("Дані замовлення для відправки:", form)
