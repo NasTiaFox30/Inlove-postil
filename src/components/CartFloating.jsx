@@ -76,6 +76,21 @@ export default function CartFloating({ cartList, activeCartIndex, onRemove, onSe
     document.getElementById('rozmiry')?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  // Маленька кругла кнопка
+  if (isMinimized) {
+    return (
+      <button 
+        className={styles.cartBadgeMinimized} 
+        onClick={handleMaximizeHandly}
+        title="Відкрити кошик"
+        aria-label="Відкрити кошик"
+      >
+        <span className={styles.badgeIconLarge}>🛒</span>
+        <span className={styles.badgeCount}>{cartList.length}</span>
+      </button>
+    )
+  }
+
   return (
     <div className={styles.cartFloating}>
       <div className={styles.header}>
