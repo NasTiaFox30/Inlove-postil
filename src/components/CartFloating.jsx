@@ -102,7 +102,15 @@ export default function CartFloating({ cartList, activeCartIndex, onRemove, onSe
           <span className={styles.bagIcon}>🛒</span>
           <h4>Ваш кошик ({cartList.length})</h4>
         </div>
+        
         <button onClick={onClear} className={styles.clearCartLink}>Очистити все</button>
+        <button 
+            className={styles.minimizeBtn} 
+            onClick={handleMinimizeHandly}
+            title="Згорнути кошик"
+          >
+            ➔
+          </button>
       </div>
 
       {/* Список товарів */}
