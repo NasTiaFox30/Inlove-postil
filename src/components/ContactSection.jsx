@@ -18,38 +18,104 @@ export default function ContactSection({ cartList, onClearCart }) {
 
   const handleSubmit = e => {
     e.preventDefault()
-    console.log("Дані замовлення для відправки:", form)
+
+    let payload = {}
+
+    if (hasItems) {
+      // Сценарій 1: Оформлення покупки
+      const itemsSummary = cartList.map((item, idx) => {
+        const extrasList = item.selectedExtras.map(e => e.label).join(', ')
+        return `${idx + 1}. ${item.nameUa} (${item.sizeLabel}) ${extrasList ? `[Послуги: ${extrasList}]` : ''}`
+      }).join('\n')
+
+      payload = {
+        type: "ЗАМОВЛЕННЯ",
+        name: form.name,
+        phone: form.phone,
+        userComment: form.comment,
+        orderedItems: itemsSummary,
+        totalPrice: totalOrderPrice
+      }
+    } else {
+      // Сценарій 2: Просто запитання / консультація
+      payload = {
+        type: "ЗАПИТАННЯ / КОНСУЛЬТАЦІЯ",
+        name: form.name,
+        phone: form.phone,
+        userQuestion: form.comment
+      }
+    }
+
+    console.log("Фінальний пакет даних для Telegram/API:", payload)
+    
     setSent(true)
-    onClearCart()
+    onClearCart() // Очищуємо кошик, якщо він був заповнений
   }
 
   return (
     <section className={styles.section} id="kontakty">
       <div className={styles.inner}>
+        
+        {/* Ліва частина: Динамічний текст або Чек-аут кошика */}
         <div className={styles.left}>
-          <p className={styles.eyebrow}>Контакти</p>
-          <h2 className={styles.title}>Залишіть заявку</h2>
-          <p className={styles.sub}>
-            Коли ваш кошик повністю сформований відправте заявку. Перевірте згенерований список у полі нижче, вкажіть ваше ім'я та телефон.
+          <p className={styles.eyebrow}>
+            {hasItems ? 'Оформлення' : 'Консультація'}
           </p>
-          <div className={styles.contacts}>
-            <a href="https://t.me/inlove_postil" className={styles.contactItem} target="_blank" rel="noreferrer">
-              <span className={styles.contactIcon}>✈️</span>
-              <span>Telegram: @inlove_postil</span>
-            </a>
-            <a href="https://instagram.com/inlove.postil" className={styles.contactItem} target="_blank" rel="noreferrer">
-              <span className={styles.contactIcon}>📸</span>
-              <span>Instagram: @inlove.postil</span>
-            </a>
-          </div>
+          <h2 className={styles.title}>
+            {hasItems ? 'Ваше замовлення' : 'Залишіть заявку'}
+          </h2>
+          
+          {hasItems ? (
+            /* Віджети кошика, якщо товар обрано */
+            <div className={styles.checkoutCartBlock}>
+              <div className={styles.checkoutItemsList}>
+                {cartList.map((item) => {
+                  const itemExtrasPrice = item.selectedExtras.reduce((sum, e) => sum + (e.price || 0), 0)
+                  const itemTotalPrice = item.basePriceSale + itemExtrasPrice
+
+                  return (
+                    <div key={item.cartId} className={styles.checkoutItemRow}>
+                      <div className={styles.checkoutItemMain}>
+                        <span className={styles.checkoutItemName}>{item.nameUa}</span>
+                        <span className={styles.checkoutItemMeta}>({item.sizeLabel})</span>
+                        {item.selectedExtras.length > 0 && (
+                          <div className={styles.checkoutItemExtras}>
+                            {item.selectedExtras.map((ext, i) => (
+                              <span key={i} className={styles.checkoutExtraBadge}>+{ext.label}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <span className={styles.checkoutItemPrice}>{itemTotalPrice.toLocaleString('uk-UA')} грн</span>
+                    </div>
+                  )
+                })}
+              </div>
+              
+              <div className={styles.checkoutTotalRow}>
+                <span>Разом до оплати:</span>
+                <strong>{totalOrderPrice.toLocaleString('uk-UA')} грн</strong>
+              </div>
+            </div>
+          ) : (
+            /* Текст для консультації, якщо кошик порожній */
+            <p className={styles.sub}>
+              Якщо у вас є питання або сумніви — звертайтесь, заповнивши заявку! Ми постараємося відповісти на всі питання та допомогти з вибором.
+            </p>
+          )}
         </div>
 
+        {/* Права частина: Інтерактивна розумна форма */}
         <div className={styles.right}>
           {sent ? (
             <div className={styles.success}>
               <div className={styles.successIcon}>🎉</div>
-              <h3>Дякуємо за замовлення!</h3>
-              <p>Настя вже отримала делікатну специфікацію вашого кошика й скоро зателефонує.</p>
+              <h3>{hasItems ? 'Дякуємо за замовлення!' : 'Заявку прийнято!'}</h3>
+              <p>
+                {hasItems 
+                  ? "Ми вже отримали делікатну специфікацію вашого кошика й скоро зателефонуємо."
+                  : "Ми отримали ваше запитання. Менеджер зв'яжеться з вами найближчим часом, щоб допомогти."}
+              </p>
             </div>
           ) : (
             <form className={styles.form} onSubmit={handleSubmit}>
@@ -60,10 +126,12 @@ export default function ContactSection({ cartList, onClearCart }) {
                   type="text"
                   name="name"
                   placeholder="Олена"
+                  required
                   value={form.name}
                   onChange={handleChange}
                 />
               </div>
+              
               <div className={styles.field}>
                 <label className={styles.label}>Телефон або Telegram *</label>
                 <input
@@ -76,21 +144,37 @@ export default function ContactSection({ cartList, onClearCart }) {
                   onChange={handleChange}
                 />
               </div>
+
               <div className={styles.field}>
-                <label className={styles.label}>Специфікація замовлення</label>
+                {/* Динамічний Лейбл та зірочка обов'язковості */}
+                <label className={styles.label}>
+                  {hasItems ? "Додаткові побажання (необов'язково)" : "Ваше запитання чи побажання *"}
+                </label>
                 <textarea
                   className={styles.textarea}
                   name="comment"
-                  rows={6} // Збільшимо висоту поля, бо замовлень тепер може бути багато
-                  style={{ fontFamily: 'monospace', fontSize: '0.85rem' }} // Зробимо моноширинний красивий вигляд списку
-                  placeholder="Кошик порожній..."
+                  rows={4}
+                  /* Динамічний placeholder */
+                  placeholder={hasItems 
+                    ? "Наприклад: колір коробки, час для дзвінка чи уточнення розмірів..." 
+                    : "Напишіть, що саме вас цікавить або який колір/тканину допомогти підібрати..."
+                  }
+                  /* Поле обов'язкове ТІЛЬКИ якщо кошик порожній */
+                  required={!hasItems}
                   value={form.comment}
                   onChange={handleChange}
                 />
               </div>
-              <button type="submit" disabled={cartList.length === 0} className={styles.submitBtn}>
-                Відправити заявку
+              
+              <button type="submit" className={styles.submitBtn}>
+                {hasItems ? 'Підтвердити замовлення' : 'Надіслати запитання'}
               </button>
+              
+              <p className={styles.formNote}>
+                {hasItems 
+                  ? "* Задайте свої побажання в полі \"Додаткові побажання\" за потреби, і ми зв'яжемося з вами для уточнення деталей."
+                  : "* Менеджер відповість на всі ваші запитання в Telegram або по телефону."}
+              </p>
             </form>
           )}
         </div>
