@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import styles from './ContactSection.module.css'
 
 export default function ContactSection({ cartList, onClearCart }) {
