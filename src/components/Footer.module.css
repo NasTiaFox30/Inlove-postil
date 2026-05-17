@@ -1,0 +1,29 @@
+.footer {
+  background: #1a1917;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: #fff;
+}
+
+.logoScript { font-style: italic; font-weight: 300; color: var(--mint-light); }
+.logoDot    { color: var(--mint); }
+
+.tagline { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+.copy    { color: rgba(255,255,255,0.3); font-size: 0.78rem; }
