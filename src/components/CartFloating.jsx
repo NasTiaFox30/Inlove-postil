@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import styles from './CartFloating.module.css'
 
 export default function CartFloating({ cartList, activeCartIndex, onRemove, onSelectActive, onClear }) {
-  if (cartList.length === 0) return null
-
   const [isMinimized, setIsMinimized] = useState(false)
   // Прапорець, який фіксує, що користувач власноруч приховував кошик
   const [wasManuallyMinimized, setWasManuallyMinimized] = useState(false)
@@ -11,8 +9,11 @@ export default function CartFloating({ cartList, activeCartIndex, onRemove, onSe
   const lastScrollY = useRef(0)
   const touchStartX = useRef(0)
 
-  // --- Автоматичне згортання при скролі вниз (працює завжди), розгортання вгору (ТІЛЬКИ якщо не ховали вручну)
+  // Ефект автоматичного згортання при скролі
   useEffect(() => {
+    // Якщо товарів немає, скрол-лістенер взагалі не потрібен
+    if (!cartList || cartList.length === 0) return
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY
       
@@ -30,14 +31,14 @@ export default function CartFloating({ cartList, activeCartIndex, onRemove, onSe
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [wasManuallyMinimized])
+  }, [wasManuallyMinimized, cartList?.length]) // Слідкуємо за кількістю товарів
 
-  // --- Автоматично розгортаємо кошик при додаванні нового товару (ЯКЩО не було ручного приховування)
+  // Ефект розгортання при додаванні нових товарів
   useEffect(() => {
-    if (cartList.length > 0 && !wasManuallyMinimized) {
+    if (cartList && cartList.length > 0 && !wasManuallyMinimized) {
       setIsMinimized(false)
     }
-  }, [cartList.length, wasManuallyMinimized])
+  }, [cartList?.length, wasManuallyMinimized])
 
   // Ручне приховування кошика
   const handleMinimizeHandly = () => {
@@ -66,6 +67,11 @@ export default function CartFloating({ cartList, activeCartIndex, onRemove, onSe
     }
   }
 
+  // Безпечна перевірка: якщо кошик порожній, віддаємо порожній фрагмент стабільно
+  if (!cartList || cartList.length === 0) {
+    return <div className="cart-empty-placeholder" style={{ display: 'none' }} />
+  }
+
   const totalCartPrice = cartList.reduce((grandTotal, item) => {
     const extrasSum = item.selectedExtras.reduce((sum, ext) => sum + (ext.price || 0), 0)
     return grandTotal + item.basePriceSale + extrasSum
@@ -76,93 +82,94 @@ export default function CartFloating({ cartList, activeCartIndex, onRemove, onSe
     document.getElementById('poslugi')?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  // Маленька кругла кнопка
-  if (isMinimized) {
-    return (
-      <button 
-        className={styles.cartBadgeMinimized} 
-        onClick={handleMaximizeHandly}
-        title="Відкрити кошик"
-        aria-label="Відкрити кошик"
-      >
-        <span className={styles.badgeIconLarge}>🛒</span>
-        <span className={styles.badgeCount}>{cartList.length}</span>
-      </button>
-    )
-  }
-
   return (
-    <div 
-      className={styles.cartFloating}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-    >
-      <div className={styles.header}>
-        <div className={styles.titleRow}>
-          <span className={styles.bagIcon}>🛒</span>
-          <h4>Ваш кошик ({cartList.length})</h4>
-        </div>
-        
-        <button onClick={onClear} className={styles.clearCartLink}>Очистити все</button>
+    <>
+      {isMinimized ? (
+        /* Кругла маленька кнопка */
         <button 
-            className={styles.minimizeBtn} 
-            onClick={handleMinimizeHandly}
-            title="Згорнути кошик"
-          >
-            ➔
-          </button>
-      </div>
-
-      {/* Список товарів */}
-      <div className={styles.itemList}>
-        {cartList.map((item, idx) => {
-          const itemExtrasPrice = item.selectedExtras.reduce((sum, e) => sum + (e.price || 0), 0)
-          const itemTotalPrice = item.basePriceSale + itemExtrasPrice
-          const isActiveForEdit = idx === activeCartIndex
-
-          return (
-            <div 
-              key={item.cartId} 
-              className={`${styles.cartItem} ${isActiveForEdit ? styles.cartItemEditing : ''}`}
-            >
-              <img src={item.image} alt={item.nameUa} className={styles.itemThumb} />
-              <div className={styles.itemDetails}>
-                <p className={styles.itemName}>{item.nameUa}</p>
-                <p className={styles.itemMeta}>Розмір: {item.sizeLabel}</p>
-                {item.selectedExtras.length > 0 && (
-                  <p className={styles.itemExtrasSummary}>Послуг: +{item.selectedExtras.length}</p>
-                )}
-                <p className={styles.itemPrice}>{itemTotalPrice.toLocaleString('uk-UA')} грн</p>
-              </div>
-              
-              <div className={styles.itemActions}>
-                <button 
-                  onClick={() => handleEditExtras(idx)} 
-                  className={`${styles.actionBtn} ${isActiveForEdit ? styles.actionBtnActive : ''}`}
-                  title="Налаштувати додаткові послуги"
-                >
-                  ✨
-                </button>
-                <button 
-                  onClick={() => onRemove(idx)} 
-                  className={styles.actionBtn} 
-                  title="Видалити з кошика"
-                >
-                  🗑️
-                </button>
-              </div>
+          className={styles.cartBadgeMinimized} 
+          onClick={handleMaximizeHandly}
+          title="Відкрити кошик"
+          aria-label="Відкрити кошик"
+        >
+          <span className={styles.badgeIconLarge}>🛒</span>
+          <span className={styles.badgeCount}>{cartList.length}</span>
+        </button>
+      ) : (
+        /* Повноцінний відкритий кошик */
+        <div 
+          className={styles.cartFloating}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+        >
+          <div className={styles.header}>
+            <div className={styles.titleRow}>
+              <span className={styles.bagIcon}>🛒</span>
+              <h4>Ваш кошик ({cartList.length})</h4>
             </div>
-          )
-        })}
-      </div>
+            
+            <button onClick={onClear} className={styles.clearCartLink}>Очистити все</button>
+            <button 
+              className={styles.minimizeBtn} 
+              onClick={handleMinimizeHandly}
+              title="Згорнути кошик"
+            >
+              ➔
+            </button>
+          </div>
 
-      <div className={styles.footer}>
-        <div className={styles.priceBlock}>
-          <span className={styles.totalLabel}>Загальна сума:</span>
-          <span className={styles.totalPrice}>{totalCartPrice.toLocaleString('uk-UA')} грн</span>
+          {/* Список товарів */}
+          <div className={styles.itemList}>
+            {cartList.map((item, idx) => {
+              const itemExtrasPrice = item.selectedExtras.reduce((sum, e) => sum + (e.price || 0), 0)
+              const itemTotalPrice = item.basePriceSale + itemExtrasPrice
+              const isActiveForEdit = idx === activeCartIndex
+
+              return (
+                <div 
+                  key={item.cartId} 
+                  className={`${styles.cartItem} ${isActiveForEdit ? styles.cartItemEditing : ''}`}
+                >
+                  <img src={item.image} alt={item.nameUa} className={styles.itemThumb} />
+                  <div className={styles.itemDetails}>
+                    <p className={styles.itemName}>{item.nameUa}</p>
+                    <p className={styles.itemMeta}>Розмір: {item.sizeLabel}</p>
+                    {item.selectedExtras.length > 0 && (
+                      <p className={styles.itemExtrasSummary}>Послуг: +{item.selectedExtras.length}</p>
+                    )}
+                    <p className={styles.itemPrice}>{itemTotalPrice.toLocaleString('uk-UA')} грн</p>
+                  </div>
+                  
+                  <div className={styles.itemActions}>
+                    <button 
+                      onClick={() => handleEditExtras(idx)} 
+                      className={`${styles.actionBtn} ${isActiveForEdit ? styles.actionBtnActive : ''}`}
+                      title="Налаштувати додаткові послуги"
+                    >
+                      ✨
+                    </button>
+                    <button 
+                      onClick={() => onRemove(idx)} 
+                      className={styles.actionBtn} 
+                      title="Видалити з кошика"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          <div className={styles.footer}>
+            <div className={styles.priceBlock}>
+              <span className={styles.totalLabel}>Загальна сума:</span>
+              <span className={styles.totalPrice}>{totalCartPrice.toLocaleString('uk-UA')} грн</span>
+            </div>
+            <a href="#kontakty" className={styles.checkoutBtn}>Оформити</a>
+          </div>
         </div>
-        <a href="#kontakty" className={styles.checkoutBtn}>Оформити замовлення</a>
-      </div>
-    </div>
+      )}
+    </>
   )
 }
