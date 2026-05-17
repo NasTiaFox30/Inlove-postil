@@ -2,7 +2,7 @@
   position: fixed;
   bottom: 24px;
   right: 24px;
-  width: 350px; /* Трохи розширимо для списку */
+  width: 350px;
   max-height: 450px;
   background: #fff;
   border-radius: var(--radius-lg);
@@ -12,11 +12,87 @@
   z-index: 1000;
   display: flex;
   flex-direction: column;
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Нова Кнопка згортання у праву сторону */
+.minimizeBtn {
+  font-size: 1.1rem; /* Акуратний преміальний розмір стрілочки */
+  color: var(--warm-gray);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--cream); /* Легка підкладка, щоб зчитувалась як кнопка */
+  transition: all var(--transition);
+}
+
+.minimizeBtn:hover {
+  color: var(--mint-dark);
+  background: var(--mint-pale);
+  transform: translateX(2px); /* Легкий інтерактивний рух праворуч */
+}
+
+/* Компактний круглий кошик (коли згорнуто) */
+.cartBadgeMinimized {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 60px;
+  height: 60px;
+  background: var(--mint-dark);
+  border-radius: 50%;
+  box-shadow: 0 8px 32px rgba(78, 145, 128, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+  transition: transform var(--transition), background var(--transition);
+  animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cartBadgeMinimized:hover {
+  background: var(--mint-deep);
+  transform: scale(1.05);
+}
+
+.badgeIconLarge {
+  font-size: 1.5rem;
+}
+
+.badgeCount {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #9B2335; /* Контрастний червоний колір для кількості товарів */
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border: 2px solid #fff;
 }
 
 .titleRow { display: flex; align-items: center; gap: 0.5rem; }
-.clearCartLink { font-size: 0.75rem; color: var(--warm-gray); border-bottom: 1px dashed var(--border); }
-.clearCartLink:hover { color: #9B2335; border-color: #9B2335; }
+.clearCartLink { 
+  font-size: 0.75rem; 
+  color: var(--warm-gray); 
+  border-bottom: 1px dashed var(--border);
+  line-height: 1.2;
+}
+.clearCartLink:hover { 
+  color: #9B2335; 
+  border-color: #9B2335; 
+}
 
 .itemList {
   overflow-y: auto;
@@ -70,16 +146,13 @@
 .actionBtn:hover { background: var(--light-gray); transform: scale(1.05); }
 .actionBtnActive { background: var(--mint-dark); color: #fff; }
 
-@keyframes slideIn {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
 .header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  position: relative;
+  justify-content: space-between; /* Розносить назву та кнопки по краях */
+  width: 100%;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--light-gray); /* Робимо лінію під шапкою для преміальності */
 }
 
 .header h4 {
@@ -88,30 +161,7 @@
   font-weight: 600;
 }
 
-.header p {
-  font-size: 0.8rem;
-  color: var(--warm-gray);
-}
-
 .bagIcon { font-size: 1.4rem; }
-
-.clearBtn {
-  position: absolute;
-  right: 0;
-  top: 0;
-  color: var(--warm-gray);
-  font-size: 0.85rem;
-}
-.clearBtn:hover { color: #9B2335; }
-
-.extrasCount {
-  font-size: 0.75rem;
-  color: var(--mint-dark);
-  background: var(--mint-pale);
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-sm);
-  width: fit-content;
-}
 
 .footer {
   display: flex;
@@ -128,7 +178,7 @@
 }
 
 .totalLabel { font-size: 0.75rem; color: var(--warm-gray); }
-.totalPrice { font-size: 1.25rem; font-weight: bold; color: var(--charcoal); }
+.totalPrice { font-size: 1.15rem; font-weight: bold; color: var(--charcoal); }
 
 .checkoutBtn {
   padding: 0.5rem 1.2rem;
@@ -142,4 +192,28 @@
 .checkoutBtn:hover {
   background: var(--mint-deep);
   transform: translateY(-1px);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes popIn {
+  from { transform: scale(0) rotate(-45deg); opacity: 0; }
+  to { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+/* Медіа для смартфонів — робимо відкритий кошик трохи адаптивнішим за шириною */
+@media (max-width: 440px) {
+  .cartFloating {
+    width: calc(100% - 32px);
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+  .cartBadgeMinimized {
+    bottom: 16px;
+    right: 16px;
+  }
 }
