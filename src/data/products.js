@@ -60,6 +60,17 @@ export const sizes = [
   },
 ]
 
+// Знижки
+export const discountConfig = {
+  globalEnabled: false, // true — акції працюють, false — повністю вимкнути знижки на всьому сайті
+  categories: {
+    biaz: 60,
+    satin: 20,
+    stripe: 20,
+    // щоб вимкнути знижку на якусь категорію — поставити значення на 0
+  }
+}
+
 export const products = {
   biaz: {
     title: 'Бязь',
