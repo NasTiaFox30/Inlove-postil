@@ -22,7 +22,84 @@ npm run build
 ## Project structure
 
 ```
-
+Inlove.postil/
+├─ dist/
+│  ├─ assets/
+│  │  ├─ index-B_OLPNcM.js
+│  │  └─ index-BaAZo24h.css
+│  ├─ media/
+│  │  ├─ IMG_2331.JPG
+│  │  ├─ IMG_2332.JPG
+│  │  ├─ IMG_2333.JPG
+│  │  ├─ IMG_2334.JPG
+│  │  ├─ IMG_2335.JPG
+│  │  ├─ IMG_2336.PNG
+│  │  ├─ IMG_2337.PNG
+│  │  ├─ IMG_2338.PNG
+│  │  ├─ IMG_2339.PNG
+│  │  ├─ IMG_2340.PNG
+│  │  ├─ IMG_2341.PNG
+│  │  ├─ IMG_2342.PNG
+│  │  ├─ IMG_2343.PNG
+│  │  ├─ IMG_2344.PNG
+│  │  └─ IMG_2345.PNG
+│  ├─ favicon.svg
+│  ├─ index.html
+│  └─ texture.jpg
+├─ public/
+│  ├─ media/
+│  │  ├─ IMG_2331.JPG
+│  │  ├─ IMG_2332.JPG
+│  │  ├─ IMG_2333.JPG
+│  │  ├─ IMG_2334.JPG
+│  │  ├─ IMG_2335.JPG
+│  │  ├─ IMG_2336.PNG
+│  │  ├─ IMG_2337.PNG
+│  │  ├─ IMG_2338.PNG
+│  │  ├─ IMG_2339.PNG
+│  │  ├─ IMG_2340.PNG
+│  │  ├─ IMG_2341.PNG
+│  │  ├─ IMG_2342.PNG
+│  │  ├─ IMG_2343.PNG
+│  │  ├─ IMG_2344.PNG
+│  │  └─ IMG_2345.PNG
+│  ├─ favicon.svg
+│  └─ texture.jpg
+├─ src/
+│  ├─ assets/
+│  │  ├─ hero.png
+│  │  ├─ react.svg
+│  │  └─ vite.svg
+│  ├─ components/
+│  │  ├─ CartFloating.jsx
+│  │  ├─ CartFloating.module.css
+│  │  ├─ ContactSection.jsx
+│  │  ├─ ContactSection.module.css
+│  │  ├─ DeliverySection.jsx
+│  │  ├─ DeliverySection.module.css
+│  │  ├─ ExtrasSection.jsx
+│  │  ├─ ExtrasSection.module.css
+│  │  ├─ Footer.jsx
+│  │  ├─ Footer.module.css
+│  │  ├─ Header.jsx
+│  │  ├─ Header.module.css
+│  │  ├─ Hero.jsx
+│  │  ├─ Hero.module.css
+│  │  ├─ ProductSection.jsx
+│  │  └─ ProductSection.module.css
+│  ├─ data/
+│  │  └─ products.js
+│  ├─ App.jsx
+│  ├─ index.css
+│  └─ main.jsx
+├─ .gitignore
+├─ eslint.config.js
+├─ index.html
+├─ package-lock.json
+├─ package.json
+├─ README.md
+├─ README.md.local
+└─ vite.config.js
 ```
 
 ## How to change content
