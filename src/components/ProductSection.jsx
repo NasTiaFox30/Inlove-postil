@@ -1,13 +1,22 @@
 import { useState } from 'react'
 import styles from './ProductSection.module.css'
-import { sizes } from '../data/products'
+import { sizes, discountConfig } from '../data/products'
 
 export default function ProductSection({ category, data, onAddToCart, cartList }) {
   const [activeItem, setActiveItem] = useState(data.items[0])
   const [activeSize, setActiveSize] = useState('poltora')
 
-  const price = data.prices[activeSize]
-  const currentSizeObj = sizes.find(s => s.id === activeSize)
+  // Отримуємо готові фіксовані ціни з об'єкта products.js для поточного розміру
+  const rawPrice = data.prices[activeSize]
+
+  // Динамічно витягуємо індивідуальний відсоток знижки для цієї категорії тканин з конфігу
+  const currentDiscountPercent = discountConfig.categories[category] || 0
+
+  // Знижка активна, якщо вона увімкнена глобально ТА відсоток для цієї категорії більший за 0
+  const isDiscountActive = discountConfig.globalEnabled && (currentDiscountPercent > 0)
+
+  // Визначаємо фінальну ціну продажу: якщо акція активна — беремо готову фіксовану ціну 'sale'
+  const finalPrice = isDiscountActive ? rawPrice.sale : rawPrice.original
 
   // перевірка, чи саме цей колір ТА розмір уже є в кошику
   const isAlreadyInCart = cartList?.some(
@@ -23,9 +32,9 @@ export default function ProductSection({ category, data, onAddToCart, cartList }
       nameUa: activeItem.nameUa,
       category: category,
       sizeId: activeSize,
-      sizeLabel: currentSizeObj?.label,
-      basePriceOriginal: price.original,
-      basePriceSale: price.sale,
+      sizeLabel: sizes.find(s => s.id === activeSize)?.label,
+      basePriceOriginal: rawPrice.original,
+      basePriceSale: finalPrice, // Передаємо точну ціну продавця у кошик
       image: activeItem.image
     })
 
@@ -133,14 +142,21 @@ export default function ProductSection({ category, data, onAddToCart, cartList }
           </div>
           
           <div className={styles.priceBox}>
-            <div className={styles.priceRow}>
-              <span className={styles.priceOld}>{price.original.toLocaleString('uk-UA')} грн</span>
-              <span className={styles.discountBadge}>−20%</span>
-            </div>
+            {/* Рендеримо закреслену стару ціну та динамічний дисконт-бейдж */}
+            {isDiscountActive && (
+              <div className={styles.priceRow}>
+                <span className={styles.priceOld}>{rawPrice.original.toLocaleString('uk-UA')} грн</span>
+                <span className={styles.discountBadge}>−{currentDiscountPercent}%</span>
+              </div>
+            )}
+            
             <div className={styles.priceSale}>
-              {price.sale.toLocaleString('uk-UA')} грн
+              {finalPrice.toLocaleString('uk-UA')} грн
             </div>
-            <p className={styles.priceNote}>зі знижкою</p>
+            
+            <p className={styles.priceNote}>
+              {isDiscountActive ? 'зі знижкою' : 'стандартна ціна'}
+            </p>
             
             <button onClick={handleOrderClick} className={styles.orderBtn}>
               {isAlreadyInCart ? '✓ Додати ще один' : 'Замовити'}
