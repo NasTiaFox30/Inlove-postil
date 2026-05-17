@@ -62,9 +62,9 @@ export const sizes = [
 
 // Знижки
 export const discountConfig = {
-  globalEnabled: false, // true — акції працюють, false — повністю вимкнути знижки на всьому сайті
+  globalEnabled: true, // true — акції працюють, false — повністю вимкнути знижки на всьому сайті
   categories: {
-    biaz: 60,
+    biaz: 20,
     satin: 20,
     stripe: 20,
     // щоб вимкнути знижку на якусь категорію — поставити значення на 0
