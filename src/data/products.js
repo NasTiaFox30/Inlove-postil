@@ -1,3 +1,18 @@
+export const headerdetails = {
+  logoImg: '/favicon.svg',
+  logo: {
+    script: 'inlove',
+    dot: '.',
+    word: 'postil',
+  },
+  navLinks: [
+    { label: 'Послуги', href: '#poslugi' },
+    { label: 'Доставка', href: '#dostavka' },
+    { label: 'Контакти', href: '#kontakty' },
+  ],
+}
+
+
 export const herodetails = [
   {
     title: 'Постільна білизна, яку хочеться відчувати',
