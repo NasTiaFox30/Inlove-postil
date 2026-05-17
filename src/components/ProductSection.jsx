@@ -9,6 +9,11 @@ export default function ProductSection({ category, data, onAddToCart, cartList }
   const price = data.prices[activeSize]
   const currentSizeObj = sizes.find(s => s.id === activeSize)
 
+  // перевірка, чи саме цей колір ТА розмір уже є в кошику
+  const isAlreadyInCart = cartList?.some(
+    item => item.id === activeItem.id && item.sizeId === activeSize
+  )
+
   const handleOrderClick = (e) => {
     e.preventDefault()
     
@@ -35,15 +40,12 @@ export default function ProductSection({ category, data, onAddToCart, cartList }
           <div className={styles.bannerBadge}>{data.titleEn}</div>
           <h2 className={styles.bannerTitle}>{data.title}</h2>
           <p className={styles.bannerSub}>{data.tagline}</p>
-          
-          {/* Description */}
-        <p className={styles.desc}>{data.description}</p>
+          <p className={styles.desc}>{data.description}</p>
         </div>
       </div>
 
       <div className={styles.wrapper}>
         
-
         {/* Color swatches */}
         <div className={styles.swatches}>
           <p className={styles.swatchLabel}>Оберіть колір:</p>
@@ -53,7 +55,8 @@ export default function ProductSection({ category, data, onAddToCart, cartList }
                 key={item.id}
                 className={`${styles.swatch} ${activeItem?.id === item.id ? styles.swatchActive : ''}`}
                 style={{ '--c': item.color }}
-                onClick={() => setActiveItem(activeItem?.id === item.id ? null : item)}
+                /* ЗАХИСТ: Просто встановлюємо поточний item без скидання в null */
+                onClick={() => setActiveItem(item)}
                 title={item.nameUa}
                 aria-label={item.nameUa}
               />
@@ -95,12 +98,11 @@ export default function ProductSection({ category, data, onAddToCart, cartList }
             <div
               key={item.id}
               className={`${styles.card} ${activeItem?.id === item.id ? styles.cardActive : ''}`}
-              onClick={() => setActiveItem(activeItem?.id === item.id ? null : item)}
+              /* ЗАХИСТ: Замінили умову з null на прямий селект картки */
+              onClick={() => setActiveItem(item)}
             >
               <div className={styles.cardColor} style={{ background: item.color }}>
-                <div className={styles.cardColor}>
-                  <img src={item.image} alt={item.nameUa} className={styles.cardImage} />
-                </div>
+                <img src={item.image} alt={item.nameUa} className={styles.cardImage} />
               </div>
               <div className={styles.cardBody}>
                 <p className={styles.cardName}>{item.name}</p>
@@ -141,7 +143,7 @@ export default function ProductSection({ category, data, onAddToCart, cartList }
             <p className={styles.priceNote}>зі знижкою</p>
             
             <button onClick={handleOrderClick} className={styles.orderBtn}>
-              {cart?.id === activeItem.id && cart?.sizeId === activeSize ? '✓ Обрано' : 'Замовити'}
+              {isAlreadyInCart ? '✓ Додати ще один' : 'Замовити'}
             </button>
           </div>
         </div>
