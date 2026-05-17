@@ -5,28 +5,6 @@ export default function ContactSection({ cartList, onClearCart }) {
   const [form, setForm] = useState({ name: '', phone: '', comment: '' })
   const [sent, setSent] = useState(false)
 
-  useEffect(() => {
-    if (cartList.length > 0) {
-      let totalSum = 0
-      
-      // Генеруємо текстові рядки для кожного товару окремо
-      const itemsLines = cartList.map((item, idx) => {
-        const itemExtrasSum = item.selectedExtras.reduce((sum, e) => sum + (e.price || 0), 0)
-        const itemTotal = item.basePriceSale + itemExtrasSum
-        totalSum += itemTotal
-
-        const extrasText = item.selectedExtras.map(e => e.label).join(', ')
-        return `${idx + 1}. Постіль "${item.nameUa}" (${item.sizeLabel}) ${extrasText ? `[Послуги: ${extrasText}]` : '[Без доп. послуг]'} — ${itemTotal} грн`
-      })
-
-      const finalComment = `НОВЕ ЗАМОВЛЕННЯ:\n${itemsLines.join('\n')}\n\nЗАГАЛЬНА СУМА ДО ОПЛАТИ: ${totalSum} грн.`
-
-      setForm(f => ({ ...f, comment: finalComment }))
-    } else {
-      setForm(f => ({ ...f, comment: '' }))
-    }
-  }, [cartList])
-
   const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
   const handleSubmit = e => {
